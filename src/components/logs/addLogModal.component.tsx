@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import M from 'materialize-css';
+import { useDispatch } from 'react-redux';
+import { Log } from '../../types/api.types';
+import { addLog } from '../../redux/actions/logActions';
+import TechSelectOptions from '../techs/techSelectOptions.component';
 
-export type Props = {
+export default function AddLogModal() {
 
-}
-
-export default function AddLogModal(props: Props) {
+    const dispatch = useDispatch();
 
     const [message, setMessege] = useState('');
     const [attention, setAttention] = useState(false);
@@ -16,6 +18,11 @@ export default function AddLogModal(props: Props) {
         if (message === '' || tech === '') {
             M.toast({ html: 'Please Enter a message and tech' });
         } else {
+            const newLog: Log = { message, attention, tech, date: new Date() };
+            dispatch(addLog(newLog));
+
+            M.toast({ html: `Log added by ${tech}` })
+
             setMessege('');
             setTech('');
             setAttention(false)
@@ -34,9 +41,7 @@ export default function AddLogModal(props: Props) {
                             value={message}
                             onChange={e => setMessege(e.target.value)}
                         />
-                        <label htmlFor="message" className="active">
-                            Log Message
-                    </label>
+                        <label htmlFor="message" className="active">Log Message</label>
                     </div>
                 </div>
 
@@ -44,9 +49,7 @@ export default function AddLogModal(props: Props) {
                     <div className="input-field">
                         <select name="tech" value={tech} className="browser-default" onChange={e => setTech(e.target.value)}>
                             <option value="" disabled>Select Technician</option>
-                            <option value="John Doe">John Doe</option>
-                            <option value="Sam Smith">Sam Smith</option>
-                            <option value="Sara Wilson">Sara Wilson</option>
+                            <TechSelectOptions />
                         </select>
                     </div>
                 </div>

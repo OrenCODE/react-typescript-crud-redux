@@ -1,13 +1,13 @@
 export interface Log {
-    id: number,
+    id?: number,
     message: string,
     attention: boolean,
-    date: string,
+    date: Date,
     tech: string
 }
 
 export interface Tech {
-    id: number
+    id?: number
     firstName: string,
     lastName: string
 }

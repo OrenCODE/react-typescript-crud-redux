@@ -1,36 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Tech } from '../../types/api.types';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getTechs } from '../../redux/actions/techActions';
+import { AppState } from '../../redux/reducers';
 import TechItem from './techItem.component';
 
-export type Props = {
+export default function TechListModal() {
 
-}
+    const { techs, loading } = useSelector((state: AppState) => state.tech);
 
-export default function TechListModal(props: Props) {
-
-    const [techs, setTechs] = useState<Tech[]>([]);
-    const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        getTechs();
+        dispatch(getTechs());
     }, [])
-
-    const getTechs = async () => {
-        setLoading(true);
-
-        const res = await fetch('/techs');
-        const data = await res.json();
-
-        setTechs(data);
-        setLoading(false);
-    }
 
     return (
         <div id="tech-list-modal" className="modal">
             <div className="modal-content">
                 <h4>Technician List</h4>
                 <ul className="collection">
-                    {!loading && techs.map(tech => <TechItem key={tech.id} tech={tech}/>)}
+                    {!loading && techs !== [] && techs.map(tech => <TechItem key={tech.id} tech={tech} />)}
                 </ul>
             </div>
         </div>

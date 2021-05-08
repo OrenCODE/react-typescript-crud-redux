@@ -1,6 +1,8 @@
 import React, { Fragment, useEffect } from 'react';
 import M from 'materialize-css';
 import 'materialize-css/dist/css/materialize.min.css';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 import './App.css';
 
 import SearchBar from './components/layout/searchBar.component';
@@ -18,16 +20,18 @@ export default function App() {
   });
 
   return (
-    <Fragment>
-      <SearchBar />
-      <div className='container'>
-        <AddButton />
-        <AddLogModal />
-        <EditLogModal />
-        <AddTechModal />
-        <TechListModal />
-        <Logs />
-      </div>
-    </Fragment>
+    <Provider store={store}>
+      <Fragment>
+        <SearchBar />
+        <div className='container'>
+          <AddButton />
+          <AddLogModal />
+          <EditLogModal />
+          <AddTechModal />
+          <TechListModal />
+          <Logs />
+        </div>
+      </Fragment>
+    </Provider>
   );
 }

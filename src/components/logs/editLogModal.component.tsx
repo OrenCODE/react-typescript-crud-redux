@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import M from 'materialize-css';
+import { Log } from '../../types/api.types';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateLog } from '../../redux/actions/logActions';
+import { AppState } from '../../redux/reducers';
+import TechSelectOptions from '../techs/techSelectOptions.component';
 
-export type Props = {
+export default function EditLogModal() {
 
-}
+    const { current } = useSelector((state: AppState) => state.log);
+    const dispatch = useDispatch();
 
-export default function EditLogModal(props: Props) {
+    useEffect(() => {
+        if (current) {
+            setMessege(current.message);
+            setTech(current.tech);
+            setAttention(current.attention);
+        }
+    }, [current])
 
     const [message, setMessege] = useState('');
     const [attention, setAttention] = useState(false);
@@ -16,6 +28,17 @@ export default function EditLogModal(props: Props) {
         if (message === '' || tech === '') {
             M.toast({ html: 'Please Enter a message and tech' });
         } else {
+            const editedLog: Log = {
+                id: current?.id,
+                message,
+                tech,
+                attention,
+                date: new Date()
+            }
+
+            dispatch(updateLog(editedLog));
+            M.toast({ html: `Log updated by ${tech}` })
+
             setMessege('');
             setTech('');
             setAttention(false)
@@ -34,9 +57,6 @@ export default function EditLogModal(props: Props) {
                             value={message}
                             onChange={e => setMessege(e.target.value)}
                         />
-                        <label htmlFor="message" className="active">
-                            Log Message
-                    </label>
                     </div>
                 </div>
 
@@ -44,9 +64,7 @@ export default function EditLogModal(props: Props) {
                     <div className="input-field">
                         <select name="tech" value={tech} className="browser-default" onChange={e => setTech(e.target.value)}>
                             <option value="" disabled>Select Technician</option>
-                            <option value="John Doe">John Doe</option>
-                            <option value="Sam Smith">Sam Smith</option>
-                            <option value="Sara Wilson">Sara Wilson</option>
+                            <TechSelectOptions />
                         </select>
                     </div>
                 </div>

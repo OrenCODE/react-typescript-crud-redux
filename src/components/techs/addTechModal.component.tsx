@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import M from 'materialize-css';
+import { useDispatch } from 'react-redux';
+import { addTech } from '../../redux/actions/techActions';
+import { Tech } from '../../types/api.types';
 
-export type Props = {
+export default function AddTechModal() {
 
-}
-
-export default function AddTechModal(props: Props) {
+    const dispatch = useDispatch();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -15,6 +16,11 @@ export default function AddTechModal(props: Props) {
         if (firstName === '' || lastName === '') {
             M.toast({ html: 'Please Enter the first and last name' });
         } else {
+            const newTech: Tech = { firstName, lastName };
+            dispatch(addTech(newTech));
+
+            M.toast({html: `${firstName} ${lastName} was added as a tech`});
+
             setFirstName('');
             setLastName('');
         }
